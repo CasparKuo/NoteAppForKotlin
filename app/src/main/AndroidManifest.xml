@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.kuoti.atk">
+
+    <!-- 需要攝錄鏡頭設備 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <!-- 寫入外部儲存設備 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- 使用錄音設備 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <!-- 新增地圖元件的時候，自動加入的設定 -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- 接收開機完成廣播事件 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!--
+         The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
+         Google Maps Android API v2, but you must specify either coarse or fine
+         location permissions for the 'MyLocation' functionality. 
+    -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- 關於應用程式的資訊 -->
+        <!-- 因為使用對話框的樣式，所以不用設定標題 -->
+        <activity
+            android:name=".activity.AboutActivity"
+            android:theme="@android:style/Theme.Holo.Dialog" />
+        <!-- 記事項目元件 -->
+        <activity android:name=".activity.ItemActivity">
+            <intent-filter>
+
+                <!-- 新增用的名稱 -->
+                <action android:name="com.example.kuoti.atk.ADD_ITEM" />
+                <!-- 修改用的名稱 -->
+                <action android:name="com.example.kuoti.atk.EDIT_ITEM" />
+                <!-- 一定要加入，內容固定不變 -->
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 選擇顏色 -->
+        <activity
+            android:name=".activity.ColorActivity"
+            android:theme="@android:style/Theme.Holo.Dialog">
+
+            <!-- 加入設定元件啟動用的Action名稱 -->
+            <intent-filter>
+                <action android:name="com.example.kuoti.atk.CHOOSE_COLOR" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.PrefActivity" />
+
+        <!-- 加入FileProvider設定 -->
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <!-- android:resource設定路徑設定檔資源名稱 -->
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
+
+        <!-- 錄音元件 -->
+        <activity
+            android:name=".activity.RecordActivity"
+            android:label="@string/title_record"
+            android:theme="@android:style/Theme.Holo.Dialog" />
+
+        <!-- 播放元件 -->
+        <activity
+            android:name=".activity.PlayActivity"
+            android:label="@string/title_play"
+            android:theme="@android:style/Theme.Holo.Dialog" />
+
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/google_maps_api.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+
+        <activity
+            android:name=".activity.MapsActivity"
+            android:label="@string/title_activity_maps" />
+
+        <!-- 提醒廣播接收元件 -->
+        <receiver
+            android:name=".util.AlarmReceiver"
+            android:enabled="true"
+            android:exported="true" />
+
+        <!-- 開機完成廣播接收元件 -->
+        <receiver
+            android:name=".util.InitAlarmReceiver"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- 小工具元件 -->
+        <receiver android:name=".appWidget.ItemAppWidget">
+
+            <!-- 一定要加入這個Action名稱的設定 -->
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <!-- 使用android:resource指定小工具專用設定檔的資源名稱 -->
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/item_app_widget_info" />
+        </receiver>
+
+        <!-- 小工具設定元件 -->
+        <activity android:name=".appWidget.ItemAppWidgetConfigureActivity">
+
+            <!-- 一定要加入這個設定 -->
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.PictureActivity"></activity>
+    </application>
+
+</manifest>
